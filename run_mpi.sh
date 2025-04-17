@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=det_methane_2D  # create a short name for your job
-#SBATCH --nodes=3                # node count
-#SBATCH --ntasks=336             # total number of tasks across all nodes
+#SBATCH --nodes=4                # node count
+#SBATCH --ntasks=448             # total number of tasks across all nodes
 #SBATCH --cpus-per-task=1        # cpu-cores per task (>1 if multi-threaded tasks)
-#SBATCH --time=00:30:00          # total run time limit (HH:MM:SS)
+#SBATCH --time=02:00:00          # total run time limit (HH:MM:SS)
 #SBATCH --mail-user=ltt@princeton.edu
 #SBATCH --mail-type=end          # send email when job ends
 #SBATCH --account=mueller

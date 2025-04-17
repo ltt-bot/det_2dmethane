@@ -46,102 +46,116 @@ pc_initdata(
     amrex::Real pressure = prob_parm.reac_pres;
     amrex::Real rho;
     amrex::Real eint;
+    amrex::Real sum = 0.0;
 
     // Find location in domain
     amrex::Real xval = geomdata.ProbLo(0) + (amrex::Real(i) + 0.5) * geomdata.CellSize(0);
     amrex::Real yval = geomdata.ProbLo(1) + (amrex::Real(j) + 0.5) * geomdata.CellSize(1);
     // amrex::Real middle_x_val = (geomdata.ProbHi(0) - geomdata.ProbLo(0)) / 2.0;
 
-    // Default to Air
-    massfrac[H2_ID]= 0;
-    massfrac[O2_ID]= 0.233; 
-    massfrac[OH_ID]= 0;
-    massfrac[H2O_ID]= 0;
-    massfrac[CH4_ID]= 0.0;
-    massfrac[CO2_ID]= 0;
-    massfrac[C2H_ID]= 0;
-    massfrac[N2_ID]= 0.767;
-    amrex::Real sum = 0.0;
-    for (int n = 0; n < NUM_SPECIES; n++) {
-      sum+= massfrac[n];
-    }
-    amrex::Real extra_for_sum_species_check = 1.0 - sum;
-    massfrac[N2_ID] = massfrac[N2_ID] + extra_for_sum_species_check;
-    
-    velocity[0] = 0.0; // before 2327.5e2 (units in cm/s?) now zero
-    velocity[1] = 0.0;
-    velocity[2] = 0.0;
-
-    temperature = 298.15;
-    pressure = 1013250.0;
-    eos.PYT2R(pressure, massfrac, temperature, rho);
-    eos.RTY2E(rho, temperature, massfrac, eint);
-
     // Overwrite if in ignition region 
     if (xval <= 0.1 && yval <= 1.2) {
-        // Burned / just water
-        // massfrac[N2_ID] = 0.7451;
-        // massfrac[N2_ID] = 0.0;
-        // massfrac[H_ID] = 0.0;
-        // massfrac[O2_ID] = 0.0;
-        // massfrac[O_ID] = 0.0;
-        // massfrac[OH_ID] = 0.0;
-        // massfrac[H2_ID] = 0.0;
-        // massfrac[H2O_ID] = 0.2549;
-        // //massfrac[H2O_ID] = 1.0;
-        // massfrac[HO2_ID] =  0.0;
-        // massfrac[H2O2_ID] = 0.0;
-        // massfrac[CH4_ID] = 0.0;
-        massfrac[H2_ID]= 0;
-        massfrac[O2_ID]= 0.34519; 
+        // massfrac[H2_ID] = 0;
+        // massfrac[O2_ID]= 0.22014; 
+        // massfrac[OH_ID]= 0;
+        // massfrac[H2O_ID]= 0;
+        // massfrac[CH4_ID]= 0.05519;
+        // massfrac[CO2_ID]= 0;
+        // massfrac[C2H_ID]= 0;
+        // massfrac[N2_ID]= 0.72467;
+
+        massfrac[H2_ID] = 0.01958;
+        massfrac[O2_ID]= 0.22440; 
         massfrac[OH_ID]= 0;
         massfrac[H2O_ID]= 0;
-        massfrac[CH4_ID]= 0.08653;
+        massfrac[CH4_ID]= 0.01731;
         massfrac[CO2_ID]= 0;
         massfrac[C2H_ID]= 0;
-        massfrac[N2_ID]= 0.56828;
+        massfrac[N2_ID]= 0.73871;
+
+        // massfrac[H2_ID] = 0;
+        // massfrac[O2_ID]= 0.7996; 
+        // massfrac[OH_ID]= 0;
+        // massfrac[H2O_ID]= 0;
+        // massfrac[CH4_ID]= 0.2004;
+        // massfrac[CO2_ID]= 0;
+        // massfrac[C2H_ID]= 0;
+        // massfrac[N2_ID]= 0.0;
         amrex::Real sum = 0.0;
         for (int n = 0; n < NUM_SPECIES; n++) {
           sum+= massfrac[n];
         }
         amrex::Real extra_for_sum_species_check = 1.0 - sum;
         massfrac[N2_ID] = massfrac[N2_ID] + extra_for_sum_species_check;
-        //velocity[0] = 1800.1e2; // before 2327.5e2 (units in cm/s?) might need to change this
-        velocity[0] = 0;
+        velocity[0] = 1800.1e2; // before 2327.5e2 (units in cm/s?) might need to change this
+        //velocity[0] = 0;
         temperature = 2500;
         pressure = 4.053e7; // multiply by ten if in Pa (units?)
         eos.PYT2R(pressure, massfrac, temperature, rho);
         eos.RTY2E(rho, temperature, massfrac, eint);
       }
-      else if (xval <= 8 && yval <= 1.2) {
-        // Unburned stoichiometric
-        if (prob_parm.equiv_ratio == 1.0) {
-          massfrac[H2_ID]= 0;
-          massfrac[O2_ID]= 0.34519; 
-          massfrac[OH_ID]= 0;
-          massfrac[H2O_ID]= 0;
-          massfrac[CH4_ID]= 0.08653;
-          massfrac[CO2_ID]= 0;
-          massfrac[C2H_ID]= 0;
-          massfrac[N2_ID]= 0.56828;
+    else if (xval <= 8 && yval <= 1.2) {
+        // massfrac[H2_ID] = 0;
+        // massfrac[O2_ID]= 0.22014; 
+        // massfrac[OH_ID]= 0;
+        // massfrac[H2O_ID]= 0;
+        // massfrac[CH4_ID]= 0.05519;
+        // massfrac[CO2_ID]= 0;
+        // massfrac[C2H_ID]= 0;
+        // massfrac[N2_ID]= 0.72467;
+        massfrac[H2_ID] = 0.01958;
+        massfrac[O2_ID]= 0.22440; 
+        massfrac[OH_ID]= 0;
+        massfrac[H2O_ID]= 0;
+        massfrac[CH4_ID]= 0.01731;
+        massfrac[CO2_ID]= 0;
+        massfrac[C2H_ID]= 0;
+        massfrac[N2_ID]= 0.73871;
 
-          amrex::Real sum = 0.0;
-          for (int n = 0; n < NUM_SPECIES; n++) {
-            sum+= massfrac[n];
-          }
-          amrex::Real extra_for_sum_species_check = 1.0 - sum;
-          massfrac[N2_ID] = massfrac[N2_ID] + extra_for_sum_species_check;
-          //velocity[0] = 1800e1;
-          velocity[0] = 0;
-          temperature = 298.15;
-          pressure = 1013250.0;
-          eos.PYT2R(pressure, massfrac, temperature, rho);
-          eos.RTY2E(rho, temperature, massfrac, eint);
+        // massfrac[H2_ID] = 0;
+        // massfrac[O2_ID]= 0.7996; 
+        // massfrac[OH_ID]= 0;
+        // massfrac[H2O_ID]= 0;
+        // massfrac[CH4_ID]= 0.2004;
+        // massfrac[CO2_ID]= 0;
+        // massfrac[C2H_ID]= 0;
+        // massfrac[N2_ID]= 0.0;
+        // amrex::Real sum = 0.0;
+        for (int n = 0; n < NUM_SPECIES; n++) {
+          sum+= massfrac[n];
         }
-        else{
-          amrex::Print() << "Only stoichiometric currently supported" << std::endl;
-          exit(EXIT_FAILURE);
+        amrex::Real extra_for_sum_species_check = 1.0 - sum;
+        massfrac[N2_ID] = massfrac[N2_ID] + extra_for_sum_species_check;
+        velocity[0] = 0;
+        temperature = 298.15;
+        pressure = 1013250.0;
+        eos.PYT2R(pressure, massfrac, temperature, rho);
+        eos.RTY2E(rho, temperature, massfrac, eint);
+      }
+      else {
+        // Default to Air
+        massfrac[H2_ID]= 0;
+        massfrac[O2_ID]= 0.233; 
+        massfrac[OH_ID]= 0;
+        massfrac[H2O_ID]= 0;
+        massfrac[CH4_ID]= 0.0;
+        massfrac[CO2_ID]= 0;
+        massfrac[C2H_ID]= 0;
+        massfrac[N2_ID]= 0.767;
+        for (int n = 0; n < NUM_SPECIES; n++) {
+          sum+= massfrac[n];
         }
+        amrex::Real extra_for_sum_species_check = 1.0 - sum;
+        massfrac[N2_ID] = massfrac[N2_ID] + extra_for_sum_species_check;
+        
+        velocity[0] = 0.0; // before 2327.5e2 (units in cm/s?) now zero
+        velocity[1] = 0.0;
+        velocity[2] = 0.0;
+
+        temperature = 298.15;
+        pressure = 1013250.0;
+        eos.PYT2R(pressure, massfrac, temperature, rho);
+        eos.RTY2E(rho, temperature, massfrac, eint);
       }
     // Set the state
     state(i, j, k, URHO) = rho;
@@ -203,6 +217,7 @@ bcnormal(
           amrex::Real vy_in = 0.0;
           amrex::Real vz_in = 0.0;
           amrex::Real rho = s_ext[URHO];
+          amrex::Real ratio = 0.5;
 
           for (int n = 0; n < NUM_SPECIES; n++) {
             massfrac_int[n] = s_int[UFS + n] / s_int[URHO];
@@ -222,9 +237,15 @@ bcnormal(
           if (p_int >= inj_p0) {
             p_ext = p_int;
             s_ext[UTEMP] = inj_t0 * pow((p_ext / inj_p0),(gamma-1)/gamma);
-            massfrac_ext[O2_ID]= 0.34519; 
-            massfrac_ext[CH4_ID]= 0.08653;
-            massfrac_ext[N2_ID]= 0.56828;
+            // massfrac_ext[O2_ID]= 0.22014; 
+            // massfrac_ext[CH4_ID]= 0.05519;
+            // massfrac_ext[N2_ID]= 0.72467;
+            // massfrac_ext[O2_ID]= 0.7996; 
+            // massfrac_ext[CH4_ID]= 0.2004;
+            massfrac_ext[H2_ID] = 0.01958;
+            massfrac_ext[O2_ID]= 0.22440; 
+            massfrac_ext[CH4_ID]= 0.01731;
+            massfrac_ext[N2_ID]= 0.73871;    
             eos.TY2Cp(s_ext[UTEMP],massfrac_ext,Cp);
             eos.TY2Cv(s_ext[UTEMP],massfrac_ext,Cv);
             R = Cp - Cv;
@@ -245,9 +266,15 @@ bcnormal(
           else if (p_int>p_cr){
               p_ext = p_int;
               s_ext[UTEMP] = inj_t0 * pow((p_ext / inj_p0),(gamma-1)/gamma);
-              massfrac_ext[N2_ID] = 0.56828;
-              massfrac_ext[O2_ID] = 0.34519;
-              massfrac_ext[CH4_ID] = 0.08653;
+              // massfrac_ext[O2_ID]= 0.22014; 
+              // massfrac_ext[CH4_ID]= 0.05519;
+              // massfrac_ext[N2_ID]= 0.72467;
+              // massfrac_ext[O2_ID]= 0.7996; 
+              // massfrac_ext[CH4_ID]= 0.2004;
+              massfrac_ext[H2_ID] = 0.01958;
+              massfrac_ext[O2_ID]= 0.22440; 
+              massfrac_ext[CH4_ID]= 0.01731;
+              massfrac_ext[N2_ID]= 0.73871; 
               eos.TY2Cp(s_ext[UTEMP],massfrac_ext,Cp);
               eos.TY2Cv(s_ext[UTEMP],massfrac_ext,Cv);
               R = Cp - Cv;
@@ -266,9 +293,15 @@ bcnormal(
            else {
               p_ext = p_cr;
               s_ext[UTEMP] = inj_t0 * (2/(gamma+1));
-              massfrac_ext[N2_ID] = 0.56828;
-              massfrac_ext[O2_ID] = 0.34519;
-              massfrac_ext[CH4_ID] = 0.08653;
+              // massfrac_ext[O2_ID]= 0.22014; 
+              // massfrac_ext[CH4_ID]= 0.05519;
+              // massfrac_ext[N2_ID]= 0.72467;
+              // massfrac_ext[O2_ID]= 0.7996; 
+              // massfrac_ext[CH4_ID]= 0.2004;
+              massfrac_ext[H2_ID] = 0.01958;
+              massfrac_ext[O2_ID]= 0.22440; 
+              massfrac_ext[CH4_ID]= 0.01731;
+              massfrac_ext[N2_ID]= 0.73871; 
               eos.TY2Cp(s_ext[UTEMP],massfrac_ext,Cp);
               eos.TY2Cv(s_ext[UTEMP],massfrac_ext,Cv);
               R = Cp - Cv;
